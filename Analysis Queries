@@ -1,11 +1,9 @@
 --create database
-<br>
-<br>
+
 create database school;
-<br>
-<br>
+
 --create table
-<br>
+
 CREATE TABLE school_records (
     serial_number INT PRIMARY KEY,
     roll_number VARCHAR(20),
@@ -25,35 +23,25 @@ CREATE TABLE school_records (
     total_marks int,
     percentage float
 );
-<br>
-<br>
+
 --import csv data in table
-<br>
 COPY school_records 
 FROM '/tmp/school23.csv' 
 DELIMITER ',' 
 CSV HEADER;
-<br>
-<br>
+
 --display all records
-<br>
 select * from school_records;
-<br>
-<br>
+
 --Students with >70% 
-<br>
 select Percentage,Name from school_records 
 where Percentage>70 limit 6;
-<br>
-<br>
+
 --Count students per city 
-<br>
 select City ,count(*) as total_students from school_records
 group by City;
-<br>
-<br>
+
 --Average marks per subject 
-<br>
 select avg(hindi_marks),
     avg(english_marks),
     avg(science_marks),
@@ -62,49 +50,32 @@ select avg(hindi_marks),
     avg(total_marks),
     avg(percentage)
 from school_records;
-<br>
-<br>
+
 --Top 5 students by percentage 
-<br>
 select * from school_records order by Percentage desc limit 5;
-<br>
-<br>
+
 --Students by category 
-<br>
 select Category, count(*) from school_records group by Category;
-<br>
-<br>
---Average percentage by standard 
-<br>
-select Standard,avg(Percentage) from school_records group by Standard;
-<br>
-<br>
+
+--Average percentage by standard select Standard,avg(Percentage) from school_records group by Standard;
+
 --Male vs Female count 
-<br>
 select Gender,count(*) from school_records group by Gender;
-<br>
-<br>
+
 --Students failed in English (<33) 
-<br>
 select name,english_marks from school_records where english_marks <33 limit 5;
-<br>
-<br>
+
 --City-wise topper
-<br>
 SELECT DISTINCT ON (city) city, name, percentage
 FROM school_records
 ORDER BY city, percentage DESC;
-<br>
-<br>
+
 --Find highest score per category
-<br>
 select name,category,percentage from school_records
 where (category,percentage)in(select category,max(percentage) 
 from school_records group by category);
-<br>
-<br>
+
 --find students scoring above avg of thair standard
-<br>
 select name,standard,percentage from school_records as s
 where percentage>(select avg(percentage) 
 from school_records where standard=s.standard )limit 5;
