@@ -10,7 +10,7 @@ This project contains SQL queries used to analyze student performance and demogr
 <br>
 stored in a school_records table. The data was imported from a CSV file (/tmp/school23.csv).
 <br>
-**Database Setup**
+# Database Setup
 <br>
 Create Database: create database school; 
 <br>
