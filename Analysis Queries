@@ -1,0 +1,69 @@
+create database school;
+
+CREATE TABLE school_records (
+    serial_number INT PRIMARY KEY,
+    roll_number VARCHAR(20),
+    name VARCHAR(50),
+    father_name VARCHAR(50),
+    admission_year INT,
+    category VARCHAR(20),
+    gender CHAR(1),
+    grade VARCHAR(5),
+    city VARCHAR(50),
+    standard VARCHAR(10),
+    hindi_marks int,
+    english_marks int,
+    science_marks int,
+    maths_marks int,
+    drawing_marks int,
+    total_marks int,
+    percentage float
+);
+--import csv data in table
+COPY school_records 
+FROM '/tmp/school23.csv' 
+DELIMITER ',' 
+CSV HEADER;
+
+--display all records
+select * from school_records;
+--Students with >70% 
+select Percentage,Name from school_records 
+where Percentage>70 limit 6;
+--Count students per city 
+select City ,count(*) as total_students from school_records
+group by City;
+--Average marks per subject 
+select avg(hindi_marks),
+    avg(english_marks),
+    avg(science_marks),
+    avg(maths_marks),
+    avg(drawing_marks),
+    avg(total_marks),
+    avg(percentage)
+from school_records;
+--Top 5 students by percentage 
+select * from school_records order by Percentage desc limit 5;
+--Students by category 
+select Category, count(*) from school_records group by Category;
+--Average percentage by standard 
+select Standard,avg(Percentage) from school_records group by Standard;
+--Male vs Female count 
+select Gender,count(*) from school_records group by Gender;
+--Students failed in English (<33) 
+select name,english_marks from school_records where english_marks <33 limit 5;
+--City-wise topper
+SELECT DISTINCT ON (city) city, name, percentage
+FROM school_records
+ORDER BY city, percentage DESC;
+--Find highest score per category
+select name,category,percentage from school_records
+where (category,percentage)in(select category,max(percentage) 
+from school_records group by category);
+--find students scoring above avg of thair standard
+select name,standard,percentage from school_records as s
+where percentage>(select avg(percentage) 
+from school_records where standard=s.standard )limit 5;
+
+
+
